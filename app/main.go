@@ -17,22 +17,11 @@ func main() {
 	app := &application {
 		errLog: errorLog,
 	}
-
 	command := os.Args[1]
-
-	if command == "decode" {
-		bencodedValue := os.Args[2]
-
-		decoded, err := app.decodeBencode(bencodedValue)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		jsonOutput, _ := json.Marshal(decoded)
-		fmt.Println(string(jsonOutput))
-	} else {
-		fmt.Println("Unknown command: " + command)
-		os.Exit(1)
-	}
+	argument := os.Args[2]
+	decodedString, _ := app.process(command, argument)
+	jsonOutput, _ := json.Marshal(decodedString)
+	fmt.Println(string(jsonOutput))
 }
+
+
