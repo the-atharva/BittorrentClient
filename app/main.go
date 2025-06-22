@@ -17,6 +17,7 @@ func main() {
 	torrentFile := &torrentFile {
 		announce: "",
 		info: make(map[string]any),
+		infoHash: nil,
 	}
 	app := &application {
 		errLog: errorLog,
@@ -37,8 +38,7 @@ func  process(app *application, command, argument string) (any, error) {
 	case "info":
 			app.parseTorrentFile(argument)
 			printParsedFile(app.torrentFile)
-			// infoHash, err := app.calcInfoHash(parsedFile)
-			// fmt.Printf("\nInfo Hash: %x", infoHash)
+			fmt.Printf("\nInfo Hash: %x", app.torrentFile.infoHash)
 			return app.torrentFile, nil	
 		default:
 			fmt.Println("Unknown command: " + command)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha1"
 	"fmt"
 	"io"
 	"os"
@@ -12,10 +13,19 @@ import (
 type torrentFile struct {
 	announce string
 	info map[string]any
+	infoHash []byte
 }
 
-func (app *application) calcInfoHash(parsedFile any) ([]byte, error) {
-	return nil, nil
+func (app *application) calculateInfoHash() {
+	var buf bytes.Buffer
+	err := bencode.Marshal(&buf, app.torrentFile.info)
+	if err != nil {
+		app.errorTrace(err)
+	}
+	bencodedInfo := buf.Bytes()
+	h := sha1.New()
+	h.Write(bencodedInfo)
+	app.torrentFile.infoHash = h.Sum(nil)
 }
 
 func (app *application) decodeBencode(reader io.Reader) (any, error) {
@@ -59,6 +69,7 @@ func (app *application) parseTorrentFile(fileName string) {
 		fmt.Println("Can't convert decoded torrent file to map")
 		os.Exit(1)
 	}
+	app.calculateInfoHash()
 }
 
 
