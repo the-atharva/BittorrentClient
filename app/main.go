@@ -24,14 +24,14 @@ func main() {
 	fmt.Println(string(jsonOutput))
 }
 
-func  process(app *application, command, argument string) (interface{}, error) {
+func  process(app *application, command, argument string) (any, error) {
 	switch command {
 		case "decode":
 			decodedString, err := app.decodeBencode(strings.NewReader(argument))
 			return decodedString, err
 		case "info":
-			decodedfile, err := app.parseTorrentFile(argument)
-			return decodedfile, err	
+			parsedfile, err := app.parseTorrentFile(argument)
+			return parsedfile, err	
 		default:
 			fmt.Println("Unknown command: " + command)
 			os.Exit(1)

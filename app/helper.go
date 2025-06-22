@@ -10,7 +10,7 @@ import (
 	bencode "github.com/jackpal/bencode-go"
 )
 
-func (app *application) decodeBencode(reader io.Reader) (interface{}, error) {
+func (app *application) decodeBencode(reader io.Reader) (any, error) {
 	decoded, err := bencode.Decode(reader)
 	if err != nil {
 		app.errorTrace(err)
@@ -25,13 +25,14 @@ func (app *application) errorTrace(err error) {
 	os.Exit(1)
 }
 
-func (app *application) parseTorrentFile(fileName string) (interface{}, error) {
+func (app *application) parseTorrentFile(fileName string) (any, error) {
 	file, err := os.ReadFile(fileName)
 	if err != nil {
 		app.errorTrace(err)
 		return nil, err
 	}
-	return app.decodeBencode(bytes.NewReader(file))
+	parsedFile, err := app.decodeBencode(bytes.NewReader(file))
+	return parsedFile, nil
 }
 
 
