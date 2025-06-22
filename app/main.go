@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -19,19 +18,20 @@ func main() {
 	}
 	command := os.Args[1]
 	argument := os.Args[2]
-	res, _ := process(app, command, argument)
-	jsonOutput, _ := json.Marshal(res)
-	fmt.Println(string(jsonOutput))
+	process(app, command, argument)
+	
 }
 
 func  process(app *application, command, argument string) (any, error) {
 	switch command {
 		case "decode":
 			decodedString, err := app.decodeBencode(strings.NewReader(argument))
+			printDecodedString(decodedString)
 			return decodedString, err
 		case "info":
-			parsedfile, err := app.parseTorrentFile(argument)
-			return parsedfile, err	
+			parsedFile, err := app.parseTorrentFile(argument)
+			printParsedFile(parsedFile)
+			return parsedFile, err	
 		default:
 			fmt.Println("Unknown command: " + command)
 			os.Exit(1)
