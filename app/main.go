@@ -28,6 +28,9 @@ func  process(app *application, command, argument string) (interface{}, error) {
 		case "decode":
 			decodedString, err := app.decodeBencode(argument)
 			return decodedString, err
+		case "info":
+			decodedfile, err := app.parseTorrentFile(argument)
+			return decodedfile, err	
 		default:
 			fmt.Println("Unknown command: " + command)
 			os.Exit(1)
