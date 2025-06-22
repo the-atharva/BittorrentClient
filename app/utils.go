@@ -18,25 +18,11 @@ func printDecodedString(decodedString any) {
 	fmt.Println(string(jsonOutput))
 }
 
-func printParsedFile(decodedFile any) {
-	if fileMap, ok := decodedFile.(map[string]any); ok {
-		if trackerURL, exists := fileMap["announce"]; exists {
-			fmt.Printf("\nTracker URL: %s", trackerURL)
-		} else {
-			fmt.Println("ERROR: Announce key doesn't exist")		
-		}
-		if info, exists := fileMap["info"]; exists {
-			if infoMap, ok := info.(map[string]any); ok {
-				if length, exists := infoMap["length"]; exists {
-					fmt.Printf("\nLength: %v\n", length)
-				} else {
-					fmt.Println("ERROR: Length doesnmt exist")
-				}
-			}
-		} else {
-			fmt.Println("ERROR: Info doesn't exist")
-		}
-	} else {
-		fmt.Println("Can't convert decoded torrent file to map")
-	}
+func printParsedFile(decodedFile *torrentFile) {
+	fmt.Printf("\nannounce: %s", decodedFile.announce)
+	fmt.Printf("\nlength: %d", decodedFile.info["length"])	
+	fmt.Printf("\nname: %s", decodedFile.info["name"])	
+	fmt.Printf("\npiece length: %d", decodedFile.info["piece length"])	
+	fmt.Printf("\npieces: % x", decodedFile.info["pieces"])	
+
 }
