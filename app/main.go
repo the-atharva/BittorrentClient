@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 type application struct {
 	errLog *log.Logger
@@ -26,7 +27,7 @@ func main() {
 func  process(app *application, command, argument string) (interface{}, error) {
 	switch command {
 		case "decode":
-			decodedString, err := app.decodeBencode(argument)
+			decodedString, err := app.decodeBencode(strings.NewReader(argument))
 			return decodedString, err
 		case "info":
 			decodedfile, err := app.parseTorrentFile(argument)
