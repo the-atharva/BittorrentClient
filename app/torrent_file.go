@@ -69,6 +69,10 @@ func (app *application) parseTorrentFile(fileName string) {
 		fmt.Println("Can't convert decoded torrent file to map")
 		os.Exit(1)
 	}
+	app.torrentFile.info["length"] = app.torrentFile.info["length"].(int64) 
+	app.torrentFile.info["name"] = app.torrentFile.info["name"].(string) 
+	app.torrentFile.info["piece length"] = app.torrentFile.info["piece length"].(int64) 
+	app.torrentFile.info["pieces"] = []byte(app.torrentFile.info["pieces"].(string)) 
 	app.calculateInfoHash()
 }
 
