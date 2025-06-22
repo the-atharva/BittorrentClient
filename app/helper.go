@@ -11,7 +11,18 @@ import (
 
 func (app *application) decodeBencode(bencodedString string) (interface{}, error) {
 	reader := strings.NewReader(bencodedString)
-	return bencode.Decode(reader) 
+	decoded, err := bencode.Decode(reader)
+	if err != nil {
+		app.errorTrace(err)
+		return nil, err
+	}
+	return decoded, nil
+}
+
+func (app *application) errorTrace(err error) {
+	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())	
+	app.errLog.Output(2, trace)
+	os.Exit(1)
 }
 
 func (app *application) parseTorrentFile(fileName string) (interface{}, error) {
@@ -23,11 +34,7 @@ func (app *application) parseTorrentFile(fileName string) (interface{}, error) {
 	return app.decodeBencode(string(file))
 }
 
-func (app *application) errorTrace(err error) {
-	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())	
-	app.errLog.Output(2, trace)
-	os.Exit(1)
-}
+
 
 
 

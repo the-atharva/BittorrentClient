@@ -18,8 +18,8 @@ func main() {
 	}
 	command := os.Args[1]
 	argument := os.Args[2]
-	decodedString, _ := process(app, command, argument)
-	jsonOutput, _ := json.Marshal(decodedString)
+	res, _ := process(app, command, argument)
+	jsonOutput, _ := json.Marshal(res)
 	fmt.Println(string(jsonOutput))
 }
 
@@ -37,3 +37,19 @@ func  process(app *application, command, argument string) (interface{}, error) {
 	}
 	return "", nil
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
