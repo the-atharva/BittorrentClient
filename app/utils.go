@@ -3,9 +3,21 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"runtime/debug"
+
+	bencode "github.com/jackpal/bencode-go"
 )
+
+func (app *application) decodeBencode(reader io.Reader) (any, error) {
+	decoded, err := bencode.Decode(reader)
+	if err != nil {
+		app.errorTrace(err)
+		return nil, err
+	}
+	return decoded, nil
+}
 
 func (app *application) errorTrace(err error) {
 	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())	
@@ -13,16 +25,8 @@ func (app *application) errorTrace(err error) {
 	os.Exit(1)
 }
 
-func printDecodedString(decodedString any) {
+func (app *application) printDecodedString(decodedString any) {
 	jsonOutput, _ := json.Marshal(decodedString)
 	fmt.Println(string(jsonOutput))
 }
 
-func printParsedFile(decodedFile *torrentFile) {
-	fmt.Printf("\nannounce: %s", decodedFile.announce)
-	fmt.Printf("\nlength: %d", decodedFile.info["length"])	
-	fmt.Printf("\nname: %s", decodedFile.info["name"])	
-	fmt.Printf("\npiece length: %d", decodedFile.info["piece length"])	
-	fmt.Printf("\npieces: % x", decodedFile.info["pieces"])	
-
-}

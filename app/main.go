@@ -11,15 +11,23 @@ type application struct {
 	torrentFile *torrentFile
 }
 
-func main() {
+var app *application
 
+func main() {
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Lshortfile)
+	torrentInfo := &torrentInfo {
+		length: 0,
+		name: "",
+		pieceLength: 0,
+		pieces: "", 
+
+	}
 	torrentFile := &torrentFile {
 		announce: "",
-		info: make(map[string]any),
+		info: torrentInfo,
 		infoHash: nil,
 	}
-	app := &application {
+	app = &application {
 		errLog: errorLog,
 		torrentFile: torrentFile,
 	}
@@ -33,12 +41,12 @@ func  process(app *application, command, argument string) (any, error) {
 	switch command {
 		case "decode":
 			decodedString, err := app.decodeBencode(strings.NewReader(argument))
-			printDecodedString(decodedString)
+			app.printDecodedString(decodedString)
 			return decodedString, err
 	case "info":
-			app.parseTorrentFile(argument)
-			printParsedFile(app.torrentFile)
-			fmt.Printf("\nInfo Hash: %x", app.torrentFile.infoHash)
+			app.torrentFile.parseTorrentFile(argument)
+			app.torrentFile.calculateInfoHash()
+			app.torrentFile.printParsedFile()
 			return app.torrentFile, nil	
 		default:
 			fmt.Println("Unknown command: " + command)
