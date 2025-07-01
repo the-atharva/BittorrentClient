@@ -15,7 +15,7 @@ var app *application
 
 func main() {
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Lshortfile)
-	torrentInfo := &torrentInfo {
+	torrentInfo := torrentInfo {
 		length: 0,
 		name: "",
 		pieceLength: 0,

@@ -12,13 +12,13 @@ import (
 
 type torrentFile struct {
 	announce string
-	info *torrentInfo
+	info torrentInfo
 	infoHash []byte
 }
 
 func (tf *torrentFile) calculateInfoHash() {
 	var buf bytes.Buffer
-	err := bencode.Marshal(&buf, *tf.info)
+	err := bencode.Marshal(&buf, tf.info)
 	if err != nil {
 		app.errorTrace(err)
 	}
