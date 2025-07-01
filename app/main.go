@@ -26,6 +26,7 @@ func main() {
 		announce: "",
 		info: torrentInfo,
 		infoHash: nil,
+		pieceHashLength: 20,
 	}
 	app = &application {
 		errLog: errorLog,

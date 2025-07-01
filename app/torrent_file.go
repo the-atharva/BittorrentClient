@@ -5,7 +5,7 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"os"
-	"strings"
+	"unicode/utf8"
 
 	bencode "github.com/jackpal/bencode-go"
 )
@@ -14,6 +14,7 @@ type torrentFile struct {
 	announce string
 	info torrentInfo
 	infoHash []byte
+	pieceHashLength int
 }
 
 func (tf *torrentFile) calculateInfoHash() {
@@ -23,8 +24,6 @@ func (tf *torrentFile) calculateInfoHash() {
 		app.errorTrace(err)
 	}
 	bencodedInfo := buf.Bytes()
-	temp, _ := app.decodeBencode(strings.NewReader(string(bencodedInfo)))
-	app.printDecodedString(temp)
 	h := sha1.New()
 	h.Write(bencodedInfo)
 	tf.infoHash = h.Sum(nil)
@@ -59,10 +58,21 @@ func (tf torrentFile) printParsedFile() {
 	fmt.Printf("\nAnnounce: %s", tf.announce)
 	tf.info.printParsedFile()
 	fmt.Printf("\nInfo Hash: % x", tf.infoHash)
+	tf.printPieceHashes()
 }
 
-
-
+func (tf torrentFile) printPieceHashes() {
+	totalPieces := utf8.RuneCountInString(tf.info.pieces)
+	if totalPieces % tf.pieceHashLength != 0 {
+		fmt.Println(
+			"\nERROR: Pieces length is %v not divisible by pieces hash length: %v", totalPieces, tf.pieceHashLength)
+		os.Exit(1)
+	}
+	fmt.Print("\nPiece hashes: ")
+	for i := 0; i < totalPieces; i += tf.pieceHashLength {
+		fmt.Printf("\n% x", tf.info.pieces[i : i + tf.pieceHashLength])
+	}
+}
 
 
 
